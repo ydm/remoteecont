@@ -69,9 +69,10 @@ print(econt.shipping(loadings, system))
 ```
 
 ##Roadmap
-The library supports everything I needed for a project of mine.  If
-you find it useful, but limited in means of functionality, please feel
-free to contribute.
+The library supports all calls needed for a normal delivery experience.  I plan
+to further enhance the code base and its functionality according to the needs
+of some projects of ours.  But if you find it limited yet, please feel free to
+contribute.
 
 ##License
 *Lesser GNU Public License*  
