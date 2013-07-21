@@ -85,8 +85,11 @@ class CurlTransfer(Transfer):
         self._curl.setopt(pycurl.HTTPPOST, self._prepare_data(self._data))
         self._curl.setopt(pycurl.WRITEFUNCTION, out.write)
 
-        self._curl.perform()
-        return out.getvalue()
+        try:
+            self._curl.perform()
+            return out.getvalue()
+        except pycurl.error:
+            return ''
 
     def close(self):
         self._curl.close()

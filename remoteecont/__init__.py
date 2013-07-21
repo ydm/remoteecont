@@ -8,11 +8,17 @@ import copy
 import datetime
 
 from remoteecont import xmlutils
+from remoteecont.transfer import CurlTransfer
 
+__all__ = [
+    'CurlTransfer',
+    'RemoteEcont',
+    'RemoteEcontXml'
+]
 
 class RemoteEcont(object):
     """Simple interface for communication with Econt services."""
- 
+
     def __init__(self, service_url, parcel_url, username, password,
                  transfer_class):
         self._service_url = service_url
@@ -194,7 +200,7 @@ class RemoteEcontXml(RemoteEcont):
 
         if isinstance(cities, dict):
             # treat `cities` as a dictionary
-            data.update(cities)            
+            data.update(cities)
         elif isinstance(cities, list):
             # treat `cities` as a list of city_name string parameters
             data.update({'city_name': cities})
@@ -222,8 +228,11 @@ class RemoteEcontXml(RemoteEcont):
             return ''
 
     def _convert_xml_to_dict(self, xml):
-        data = xmlutils.xml2dict(xml)
-        return data.get('response', data)
+        try:
+            data = xmlutils.xml2dict(xml)
+            return data.get('response', data)
+        except:
+            return {}
 
     def _generic_request(self, request_type, args=''):
         xml = self._GENERIC.format(request_type=request_type, args=args)
@@ -395,7 +404,7 @@ class RemoteEcontXml(RemoteEcont):
                 'street_other'       : '', # доп. информация
                 'phone_num'          : ''  # телефонен номер
             },
-            
+
             'receiver': {
                 'city'               : '', # Абсолютно същото като
                 'post_code'          : '', # за подателя
@@ -412,10 +421,10 @@ class RemoteEcontXml(RemoteEcont):
                 'street_ap'          : '',
                 'street_other'       : '',
                 'phone_num'          : ''},
-            
+
             'shipment': {
                 'envelope_num'       : '', # номер опаковка?!
-                
+
                 # тип пратка, едно от следните:
                 # PACK, DOCUMENT, PALLET, CARGO,
                 # DOCUMENTPALLET
@@ -429,27 +438,27 @@ class RemoteEcontXml(RemoteEcont):
                 'pay_after_test'     : '', # плащане след проба
                 'delivery_day'       : ''  # ЗАГАДКА!
             },
-            
+
             'payment': {
-                
+
                 # SENDER, RECEIVER, OTHER
                 'side'               : '', # страна платец
-                
+
                 # CASH, CREDIT, BONUS, VOUCHER
                 'method'             : '',
-                
+
                 # Сума за споделяне с получателя (ако е за
                 # сметка на подателя)
                 'receiver_share_sum' : '',
-                
+
                 # Процент за споделяне с получателя
                 'share_percent'      : '',
-                
+
                 # Клиентски номер на платеца, само при плащане
                 # на кредит
                 'key_word'           : ''
             },
-            
+
             'services': {
                 # наложен платеж
 

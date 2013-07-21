@@ -2,14 +2,10 @@
 
 from __future__ import unicode_literals
 
-from collections import Mapping, Sequence
+from collections import Mapping
 from xml.etree import ElementTree as etree
 
-try:
-    import six
-except ImportError:
-    # May be there is Django installed?
-    from django.utils import six
+from django.utils import six
 
 
 def etree2dict(root, d=None):
@@ -31,7 +27,7 @@ def etree2dict(root, d=None):
            u'__content__' : 'something',
             'b'           : ['another thing', 'yet another thing'],
             'c'           : 'forever alone'}}
-    
+
     """
     if d is None:
         d = {}
@@ -63,9 +59,9 @@ def etree2dict(root, d=None):
 
 
 def xml2dict(xml, encoding='utf-8'):
-    if not isinstance(xml, six.string_types):
+    if not xml or not isinstance(xml, six.string_types):
         raise TypeError
-    if isinstance(xml, unicode):
+    if isinstance(xml, six.text_type):
         xml = xml.encode(encoding)
 
     parser = etree.XMLParser(encoding=encoding)
